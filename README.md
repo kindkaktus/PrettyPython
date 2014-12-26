@@ -9,10 +9,12 @@ This script is capable of checking and fixing formatting in python scripts:
  - Checks and fixes PEP8 formatting (requires autopep8)
 
 Requires autopep8. Install it with:
+```bash
 # pip install --upgrade argparse autopep8
+```
 
 Usage:
-
+```python
 from PrettyPython import check_shebang, check_coding, check_pep8
 from PrettyPython import fix_shebang, fix_coding, fix_pep8
 
@@ -27,3 +29,4 @@ formatting_ok = check_pep8(dirs) and formatting_ok
 fix_shebang(dirs)
 fix_coding(dirs)
 fix_pep8(dirs)
+```
