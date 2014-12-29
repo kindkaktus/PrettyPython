@@ -23,7 +23,7 @@ CRLF = '\r\n'
 WIN32 = sys.platform == 'win32'
 SHEBANG_PATTERN = re.compile('#\!')
 CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python\s*$')
-CORRECT_CODING_LINE = re.compile('#!/usr/bin/env python')
+CORRECT_SHEBANG_LINE = '#!/usr/bin/env python'
 
 CODING_PATTERN = re.compile('coding[:=]\s*[-\w]+')
 CORRECT_CODING_PATTERN = re.compile('coding[=:]\s*utf\-8')
@@ -152,10 +152,10 @@ def fix_shebang(dirs):
 
             if len(lines) == 0 or SHEBANG_PATTERN.match(lines[0]) is None:
                 # no shebang at all, adding it
-                lines.insert(0, CORRECT_CODING_LINE)
+                lines.insert(0, CORRECT_SHEBANG_LINE)
             elif CORRECT_SHEBANG_PATTERN.match(lines[0]) is None:
                 # shebang is there but it is nok, fixing it
-                lines[0] = CORRECT_CODING_LINE
+                lines[0] = CORRECT_SHEBANG_LINE
             else:
                 continue
 
