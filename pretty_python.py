@@ -60,8 +60,8 @@ def detect_newline(lines):
 
 
 def write_file(filename, lines, newline):
-    fixed_content = ''.join(fix_line_endings(lines, newline))
-    fp = open(filename, 'w')
+    fixed_content = unicode(''.join(fix_line_endings(lines, newline)))
+    fp = io.open(filename, mode='w', encoding='utf-8')
     fp.write(fixed_content)
     fp.close()
 
@@ -107,7 +107,7 @@ def check_shebang(dirs):
     success = True
     for dir in dirs:
         for filename in recurse_dir(dir):
-            lines = io.open(filename, encoding='utf-8', mode='rt').readlines()
+            lines = io.open(filename, mode='rt', encoding='utf-8').readlines()
             if len(lines) < 1 or CORRECT_SHEBANG_PATTERN.match(lines[0]) is None:
                 success = False
                 print >> sys.stderr, 'Invalid shebang header in ' + filename
