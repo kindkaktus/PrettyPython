@@ -134,13 +134,11 @@ def fix_pep8(dirs):
     cmd = "%s %s" % (PEP8_FIX_CMD, " ".join(dirs))
     if WIN32:
         cmd = 'python ' + cmd
-    p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+    p = Popen(cmd, stderr=PIPE, shell=True)
     out, err = p.communicate()
     if p.returncode != 0:
         print >> sys.stderr, "Error checking code formatting\n%s" % err
         return False
-    if out:
-        print(out)
     return True
 
 
