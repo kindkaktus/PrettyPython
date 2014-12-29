@@ -21,6 +21,7 @@ LF = '\n'
 CRLF = '\r\n'
 
 WIN32 = sys.platform == 'win32'
+
 SHEBANG_PATTERN = re.compile('#\!')
 CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python\s*$')
 CORRECT_SHEBANG_LINE = '#!/usr/bin/env python'
@@ -29,7 +30,6 @@ CODING_PATTERN = re.compile('coding[:=]\s*[-\w]+')
 CORRECT_CODING_PATTERN = re.compile('coding[=:]\s*utf\-8')
 CORRECT_CODING_LINE = '# -*- coding: utf-8 -*-'
 
-# Configuration
 PEP8_CHECKER_COMMON_CMD = "autopep8 --recursive --aggressive --aggressive --max-line-length 99"
 PEP8_CHECK_CMD = PEP8_CHECKER_COMMON_CMD + " --diff"
 PEP8_FIX_CMD = PEP8_CHECKER_COMMON_CMD + " --in-place --verbose"
@@ -54,9 +54,10 @@ def detect_newline(lines):
         elif line.endswith(LF):
             counter[LF] += 1
 
-    if not counter:
+    if counter:
+        return sorted(counter, key=counter.get, reverse=True)[0]
+    else:
         return LF
-    return sorted(counter, key=counter.get, reverse=True)[0]
 
 
 def write_file(filename, lines, newline):
@@ -107,7 +108,7 @@ def check_shebang(dirs):
     success = True
     for dir in dirs:
         for filename in recurse_dir(dir):
-            lines = io.open(filename, mode='rt', encoding='utf-8').readlines()
+            lines = io.open(filename, encoding='utf-8', mode='rt').readlines()
             if len(lines) < 1 or CORRECT_SHEBANG_PATTERN.match(lines[0]) is None:
                 success = False
                 print >> sys.stderr, 'Invalid shebang header in ' + filename
