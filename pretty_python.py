@@ -8,6 +8,7 @@
 #
 # Requires autopep8. Install it with:
 # pip install --upgrade argparse autopep8
+# or by calling this script with --install-deps argument
 
 import sys
 import re
@@ -15,6 +16,10 @@ import os
 import io
 import collections
 from subprocess import Popen, PIPE
+try:
+    from subprocess import DEVNULL
+except ImportError:
+    DEVNULL = open(os.devnull, 'w')
 
 CR = '\r'
 LF = '\n'
@@ -192,6 +197,13 @@ def fix_coding(dirs):
     return True
 
 
+def install_deps():
+    cmd = "pip install --upgrade argparse autopep8"
+    p = Popen(cmd, stdout=DEVNULL, shell=True)
+    p.wait()
+    return True if p.returncode == 0 else False
+
+
 if __name__ == "__main__":
     # If called directly recursively check/fix scripts in the current dir
     dirs = ['./']
@@ -208,6 +220,16 @@ if __name__ == "__main__":
         success = fix_shebang(dirs) and fix_coding(dirs) and fix_pep8(dirs)
         sys.exit(0 if success else 1)
 
+    # Install dependencies
+    elif len(sys.argv) == 2 and sys.argv[1] == "--install-deps":
+        success = install_deps()
+        sys.exit(0 if success else 1)
+
     else:
-        print("Usage: %s [--fix]")
+        prog = sys.argv[0]
+        print("Usage: %s        check formatting without modifying anything" % prog)
+        print("Usage: %s --fix     check and fix formatting" % prog)
+        print(
+            "Usage: %s --install-deps     install and update dependencies (elevated rights required)" %
+            prog)
         sys.exit(1)
