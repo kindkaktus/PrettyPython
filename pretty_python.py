@@ -198,10 +198,14 @@ def fix_coding(dirs):
 
 
 def install_deps():
-    cmd = "pip install --upgrade argparse autopep8"
-    p = Popen(cmd, stdout=DEVNULL, shell=True)
-    p.wait()
-    return True if p.returncode == 0 else False
+    try:
+        import argparse
+        import autopep8
+        return True
+    except ImportError:
+        p = Popen("pip install argparse autopep8", stdout=DEVNULL, shell=True)
+        p.wait()
+        return True if p.returncode == 0 else False
 
 
 if __name__ == "__main__":
