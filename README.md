@@ -10,8 +10,9 @@ This script is capable of checking and fixing formatting in python scripts:
 
 Requires autopep8. Install it with:
 ```bash
-# pip install --upgrade argparse autopep8
+# pip install argparse autopep8
 ```
+or by calling this script with --install-deps argument
 
 Usage:
 ```python

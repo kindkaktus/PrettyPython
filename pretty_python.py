@@ -7,7 +7,7 @@
 # - Checks and fixes PEP8 formatting
 #
 # Requires autopep8. Install it with:
-# pip install --upgrade argparse autopep8
+# pip install argparse autopep8
 # or by calling this script with --install-deps argument
 
 import sys
@@ -93,13 +93,29 @@ def recurse_dir(dir):
             yield name
 
 
-def check_pep8(dirs):
+def _check_pep8(dirs):
+    """"return (program-exit-code, stdout, stderr)"""
     cmd = "%s %s" % (PEP8_CHECK_CMD, " ".join(dirs))
     if WIN32:
         cmd = 'python ' + cmd
     p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
     out, err = p.communicate()
-    if p.returncode == 0:
+    return (p.returncode, out, err)
+
+
+def _parse_filenames_from_unified_diff(diffs):
+    regex = re.compile(
+        r'^\-\-\-\s+(?:original%s)(.+?)$' %
+        re.escape(
+            os.sep),
+        re.MULTILINE | re.DOTALL)
+    filenames = re.findall(regex, diffs)
+    return filenames
+
+
+def check_pep8(dirs):
+    exit_code, out, err = _check_pep8(dirs)
+    if exit_code == 0:
         if out:
             print >> sys.stderr, out
             return False
@@ -137,6 +153,12 @@ def check_coding(dirs):
 
 
 def fix_pep8(dirs):
+    """parse files to be fixed before the actual fixing"""
+    exit_code, out, err = _check_pep8(dirs)
+    filenames = []
+    if exit_code == 0 and out:
+        filenames = _parse_filenames_from_unified_diff(out)
+
     cmd = "%s %s" % (PEP8_FIX_CMD, " ".join(dirs))
     if WIN32:
         cmd = 'python ' + cmd
@@ -145,6 +167,9 @@ def fix_pep8(dirs):
     if p.returncode != 0:
         print >> sys.stderr, "Error checking code formatting\n%s" % err
         return False
+
+    for filename in filenames:
+        print('PEP 8 reformatted ' + filename)
     return True
 
 
@@ -163,7 +188,7 @@ def fix_shebang(dirs):
             else:
                 continue
 
-            print('Fixing shebang of ' + filename)
+            print('Fixing shebang in ' + filename)
             write_file(filename, lines, original_newline)
 
     return True
@@ -191,7 +216,7 @@ def fix_coding(dirs):
                     # coding is there but it is nok, fixing it
                     lines[1] = CORRECT_CODING_LINE
 
-            print('Fixing coding of ' + filename)
+            print('Fixing coding in ' + filename)
             write_file(filename, lines, original_newline)
 
     return True
@@ -201,11 +226,13 @@ def install_deps():
     try:
         import argparse
         import autopep8
-        return True
     except ImportError:
         p = Popen("pip install argparse autopep8", stdout=DEVNULL, shell=True)
         p.wait()
-        return True if p.returncode == 0 else False
+        if p.returncode != 0:
+            return False
+
+    return True
 
 
 if __name__ == "__main__":
