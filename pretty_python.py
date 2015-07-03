@@ -25,8 +25,6 @@ CR = '\r'
 LF = '\n'
 CRLF = '\r\n'
 
-WIN32 = sys.platform == 'win32'
-
 SHEBANG_PATTERN = re.compile('#\!')
 CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python\s*$')
 CORRECT_SHEBANG_LINE = '#!/usr/bin/env python'
@@ -96,8 +94,6 @@ def recurse_dir(dir):
 def _check_pep8(dirs):
     """"return (program-exit-code, stdout, stderr)"""
     cmd = "%s %s" % (PEP8_CHECK_CMD, " ".join(dirs))
-    if WIN32:
-        cmd = 'python ' + cmd
     p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
     out, err = p.communicate()
     return (p.returncode, out, err)
@@ -160,8 +156,6 @@ def fix_pep8(dirs):
         filenames = _parse_filenames_from_unified_diff(out)
 
     cmd = "%s %s" % (PEP8_FIX_CMD, " ".join(dirs))
-    if WIN32:
-        cmd = 'python ' + cmd
     p = Popen(cmd, stderr=PIPE, shell=True)
     out, err = p.communicate()
     if p.returncode != 0:
