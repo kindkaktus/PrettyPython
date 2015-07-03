@@ -21,6 +21,8 @@ try:
 except ImportError:
     DEVNULL = open(os.devnull, 'w')
 
+IS_PYTHON2 = sys.version_info < (3, 0)
+
 CR = '\r'
 LF = '\n'
 CRLF = '\r\n'
@@ -36,6 +38,27 @@ CORRECT_CODING_LINE = '# -*- coding: utf-8 -*-'
 PEP8_CHECKER_COMMON_CMD = "autopep8 --recursive --aggressive --aggressive --max-line-length 99"
 PEP8_CHECK_CMD = PEP8_CHECKER_COMMON_CMD + " --diff"
 PEP8_FIX_CMD = PEP8_CHECKER_COMMON_CMD + " --in-place --verbose"
+
+
+def _to_unicode(s):
+    if isinstance(s, list) or isinstance(s, tuple):
+        if IS_PYTHON2:
+            s = " ".join(s)
+        else:
+            s = b" ".join(s)
+
+    needs_decode = False
+    if IS_PYTHON2 and not isinstance(s, unicode):
+        needs_decode = True
+    if not IS_PYTHON2 and not isinstance(s, str):
+        needs_decode = True
+
+    if needs_decode:
+        try:
+            s = s.decode('utf-8')
+        except UnicodeDecodeError:
+            s = s.decode('utf-8', 'replace')
+    return s
 
 
 def is_python_file(filename):
@@ -64,7 +87,7 @@ def detect_newline(lines):
 
 
 def write_file(filename, lines, newline):
-    fixed_content = unicode(''.join(fix_line_endings(lines, newline)))
+    fixed_content = _to_unicode(''.join(fix_line_endings(lines, newline)))
     fp = io.open(filename, mode='w', encoding='utf-8')
     fp.write(fixed_content)
     fp.close()
@@ -96,6 +119,8 @@ def _check_pep8(dirs):
     cmd = "%s %s" % (PEP8_CHECK_CMD, " ".join(dirs))
     p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
     out, err = p.communicate()
+    out = _to_unicode(out)
+    err = _to_unicode(err)
     return (p.returncode, out, err)
 
 
