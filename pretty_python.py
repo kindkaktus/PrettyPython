@@ -117,10 +117,10 @@ def check_pep8(dirs):
     exit_code, out, err = _check_pep8(dirs)
     if exit_code == 0:
         if out:
-            print >> sys.stderr, out
+            sys.stderr.write(out)
             return False
     else:
-        print >> sys.stderr, "Error checking code formatting\n%s" % err
+        sys.stderr.write("Error checking code formatting\n%s" % err)
         return False
     return True
 
@@ -132,7 +132,7 @@ def check_shebang(dirs):
             lines = io.open(filename, encoding='utf-8', mode='rt').readlines()
             if len(lines) < 1 or CORRECT_SHEBANG_PATTERN.match(lines[0]) is None:
                 success = False
-                print >> sys.stderr, 'Invalid shebang header in ' + filename
+                sys.stderr.write('Invalid shebang header in ' + filename)
 
     return success
 
@@ -147,7 +147,7 @@ def check_coding(dirs):
             if len(lines) >= 1 and CORRECT_CODING_PATTERN.search(lines[0]) is not None:
                 continue
             success = False
-            print >> sys.stderr, 'Invalid coding header in ' + filename
+            sys.stderr.write('Invalid coding header in ' + filename)
 
     return success
 
@@ -165,7 +165,7 @@ def fix_pep8(dirs):
     p = Popen(cmd, stderr=PIPE, shell=True)
     out, err = p.communicate()
     if p.returncode != 0:
-        print >> sys.stderr, "Error checking code formatting\n%s" % err
+        sys.stderr.write("Error checking code formatting\n%s" % err)
         return False
 
     for filename in filenames:

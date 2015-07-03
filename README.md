@@ -3,10 +3,13 @@ PrettyPython
 
 PEP-8 python code checker and formatter
 
+
 This script is capable of checking and fixing formatting in python scripts:
  - Checks and fixes python shebang to /usr/bin/env python
  - Checks and fixes python coding to utf-8
  - Checks and fixes PEP8 formatting (requires autopep8)
+
+Compatibility: Python 2.7+ or Python 3.
 
 Requires autopep8. Install it with:
 ```bash
