@@ -28,7 +28,7 @@ LF = '\n'
 CRLF = '\r\n'
 
 SHEBANG_PATTERN = re.compile('#\!')
-CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python\s*$')
+CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python')
 CORRECT_SHEBANG_LINE = '#!/usr/bin/env python'
 
 CODING_PATTERN = re.compile('coding[:=]\s*[-\w]+')
