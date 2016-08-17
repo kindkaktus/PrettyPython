@@ -244,9 +244,17 @@ def fix_coding(dirs):
 def install_deps():
     try:
         import argparse
+    except ImportError:
+        print('Installing dependencies')
+        p = Popen("pip install argparse", shell=True)
+        p.wait()
+        if p.returncode != 0:
+            return False
+    try:
         import autopep8
     except ImportError:
-        p = Popen("pip install argparse autopep8", stdout=DEVNULL, shell=True)
+        print('Installing dependencies')
+        p = Popen("pip install autopep8", shell=True)
         p.wait()
         if p.returncode != 0:
             return False
