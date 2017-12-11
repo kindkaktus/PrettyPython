@@ -35,7 +35,7 @@ CODING_PATTERN = re.compile('coding[:=]\s*[-\w]+')
 CORRECT_CODING_PATTERN = re.compile('coding[=:]\s*utf\-8')
 CORRECT_CODING_LINE = '# -*- coding: utf-8 -*-'
 
-PEP8_CHECKER_COMMON_CMD = "autopep8 --recursive --aggressive --max-line-length 99"
+PEP8_CHECKER_COMMON_CMD = "autopep8 --recursive --aggressive --max-line-length 119"
 PEP8_CHECK_CMD = PEP8_CHECKER_COMMON_CMD + " --diff"
 PEP8_FIX_CMD = PEP8_CHECKER_COMMON_CMD + " --in-place --verbose"
 
