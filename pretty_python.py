@@ -245,16 +245,18 @@ def install_deps():
     try:
         import argparse
     except ImportError:
-        print('Installing dependencies')
-        p = Popen("pip install argparse", shell=True)
+        print('Installing argparse dependencies')
+        cmd = "pip install argparse" if IS_PYTHON2 else "pip3 install argparse"
+        p = Popen(cmd, shell=True)
         p.wait()
         if p.returncode != 0:
             return False
     try:
         import autopep8
     except ImportError:
-        print('Installing dependencies')
-        p = Popen("pip install autopep8", shell=True)
+        print('Installing autopep8 dependencies')
+        cmd = "pip install autopep8" if IS_PYTHON2 else "pip3 install autopep8"
+        p = Popen(cmd , shell=True)
         p.wait()
         if p.returncode != 0:
             return False
