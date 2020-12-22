@@ -27,12 +27,12 @@ CR = '\r'
 LF = '\n'
 CRLF = '\r\n'
 
-SHEBANG_PATTERN = re.compile('#\!')
-CORRECT_SHEBANG_PATTERN = re.compile('#\!/usr/bin/env\s+python')
+SHEBANG_PATTERN = re.compile(r'#\!')
+CORRECT_SHEBANG_PATTERN = re.compile(r'#\!/usr/bin/env\s+python')
 CORRECT_SHEBANG_LINE = '#!/usr/bin/env python'
 
-CODING_PATTERN = re.compile('coding[:=]\s*[-\w]+')
-CORRECT_CODING_PATTERN = re.compile('coding[=:]\s*utf\-8')
+CODING_PATTERN = re.compile(r'coding[:=]\s*[-\w]+')
+CORRECT_CODING_PATTERN = re.compile(r'coding[=:]\s*utf\-8')
 CORRECT_CODING_LINE = '# -*- coding: utf-8 -*-'
 
 PEP8_CHECKER_COMMON_CMD = "autopep8 --recursive --aggressive --max-line-length 119"
